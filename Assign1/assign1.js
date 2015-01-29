@@ -30,5 +30,13 @@ fs.readFile('source.json', 'utf8', function (err, data) {
             }
         });
     }
+    var root = require('xmlbuilder');
+
+    root = root.create('students',
+                     {version: '1.0', encoding: 'UTF-8', standalone: true});
+    var ele = root.ele(obj);
+    var xmlString = root.end({ pretty: true, indent: '  ', newline: '\n' });
+
+    fs.writeFile('final.xml', xmlString);
 //-----------------writing ends-------------------//
 });
