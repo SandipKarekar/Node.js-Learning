@@ -1,17 +1,15 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0"?>
 <students>
-  <students>
-    <id>124</id>
-    <fName>Jane</fName>
-    <lName>Doe</lName>
+  <student id="124">
+    <name>Jane Doe</name>
     <score>543</score>
-    <id>125</id>
-    <fName>Jackie</fName>
-    <lName>Doe</lName>
+  </student>
+  <student id="125">
+    <name>Jackie Doe</name>
     <score>453</score>
-    <id>123</id>
-    <fName>John</fName>
-    <lName>Doe</lName>
+  </student>
+  <student id="123">
+    <name>John Doe</name>
     <score>234</score>
-  </students>
+  </student>
 </students>

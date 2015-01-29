@@ -32,9 +32,22 @@ fs.readFile('source.json', 'utf8', function (err, data) {
     }
     var root = require('xmlbuilder');
 
-    root = root.create('students',
-                     {version: '1.0', encoding: 'UTF-8', standalone: true});
-    var ele = root.ele(obj);
+    root = root.create('students');
+
+    var stud,
+        stud_name,
+        stud_score;
+    
+    for (i = 0; i < obj.students.length; i++) {
+        stud = root.ele('student',
+                   {'id': obj.students[i].id});
+
+        stud_name = stud.ele('name', obj.students[i].fName + ' ' + obj.students[i].lName);
+
+        stud_score = stud.ele('score', obj.students[i].score);
+    }
+
+    //var ele = root.ele(obj);
     var xmlString = root.end({ pretty: true, indent: '  ', newline: '\n' });
 
     fs.writeFile('final.xml', xmlString);
