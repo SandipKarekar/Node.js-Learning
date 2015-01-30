@@ -1,55 +1,55 @@
 
-var fs = require('fs');
-var obj;
 
-// Reading the JSON file and Parsing the contents in obj.//
+//For the application we are dealing with the files so the FileSystem module
+// should be loaded first.
+var fs = require('fs');
 
 fs.readFile('source.json', 'utf8', function (err, data) {
-    var i;
-    if (err) {
-        throw err;
-    }
-    obj = JSON.parse(data);
-
-    //-------------Reading ends-------------------//
-
-    //-------Writing the contents to destination.txt file------------//
-
-    fs.writeFile('destination.txt', 'First Name | Last Name | Score \n');
-
-    //----------------Sorting the content -------------------------//
-    obj.students = obj.students.sort(function (a, b) {
-        return b.score - a.score; // in descending order of score.
-    });
-    //-------------Sorting ends-------------------//
-
-    for (i = 0; i < obj.students.length; i++) {
-        fs.appendFile('destination.txt', obj.students[i].id + " | " + obj.students[i].fName + " | " + obj.students[i].lName + " | " + obj.students[i].score + "\n", function (err) {
-            if (err) {
-                throw err;
-            }
-        });
-    }
-    var root = require('xmlbuilder');
-
-    root = root.create('students');
-
-    var stud,
-        stud_name,
-        stud_score;
+  
+  if (err) {
+    // If the specified file failed to open or read
+    console.log('Error while reading the file');
     
-    for (i = 0; i < obj.students.length; i++) {
-        stud = root.ele('student',
-                   {'id': obj.students[i].id});
+  } else {
 
-        stud_name = stud.ele('name', obj.students[i].fName + ' ' + obj.students[i].lName);
+      var studentObject = JSON.parse(data);
 
-        stud_score = stud.ele('score', obj.students[i].score);
+      fs.writeFile('destination.txt', 'First Name | Last Name | Score \n');
+  
+
+      studentObject.students = studentObject.students.sort(function (a, b) {
+        return b.score - a.score;
+      });
+
+      for (var i = 0; i < studentObject.students.length; i++) {
+        fs.appendFile('destination.txt', studentObject.students[i].id + ' | ' 
+          + studentObject.students[i].fName + ' | ' + studentObject.students[i].lName + ' | '
+          + studentObject.students[i].score + '\n', function (err) {
+          if (err) {
+            throw err;
+          }
+        });
+      }
+
+      var rootElement = require('xmlbuilder');
+
+      rootElement = rootElement.create('students');
+
+      var stud;// for student element
+      var studName; // for name element
+      var studScore; // for score element
+    
+      for (i = 0; i < studentObject.students.length; i++) {
+        stud = rootElement.ele('student', {'id': studentObject.students[i].id});
+
+        studName = stud.ele('name', studentObject.students[i].fName + ' '
+        + studentObject.students[i].lName);
+
+        studScore = stud.ele('score', studentObject.students[i].score);
+      }
+
+      var xmlString = rootElement.end({ pretty: true, indent: '  ', newline: '\n' });
+
+      fs.writeFile('final.xml', xmlString);
     }
-
-    //var ele = root.ele(obj);
-    var xmlString = root.end({ pretty: true, indent: '  ', newline: '\n' });
-
-    fs.writeFile('final.xml', xmlString);
-//-----------------writing ends-------------------//
 });
