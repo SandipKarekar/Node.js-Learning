@@ -1,9 +1,9 @@
 
 var fs = require('fs');
 
-var sourceFile = 'source.json';
-var destinFile = 'destination.txt';
-var xmlFile = 'final.xml';
+var sourceFile = 'source/json/source.json';
+var destinFile = 'destination/txt/destination.txt';
+var xmlFile = 'destination/xml/final.xml';
 
 fs.readFile(sourceFile, 'utf8', function (err, data) {
 
@@ -72,66 +72,80 @@ fs.readFile(sourceFile, 'utf8', function (err, data) {
                     }
                     // Creating .txt file.
 
-                    fs.writeFile(destinFile, 'First Name | Last Name | Score \n');
-                    
-                    /**
-                     * Sorts the student array in descending order of the scores
-                     * @param {score of one} a 
-                     * @param {score of another} b
-                     * @return {difference of scores} this is used by sort function to compare those scores.
-                     * Finally the sorted array of object is created.
-                     */
-                    studentObject.students = studentObject.students.sort(function (a, b) {
-                      return b.score - a.score;
-                    });
+                    fs.writeFile(destinFile, 'First Name | Last Name | Score \n', function (err) {
 
-                    
-                    for (var i = 0; i < studentObject.students.length; i++) {
-                      fs.appendFile(destinFile, studentObject.students[i].id + ' | ' 
-                        + studentObject.students[i].fName + ' | '
-                        + studentObject.students[i].lName + ' | '
-                        + studentObject.students[i].score + '\n', function (err) {
-                        if (err) {
-                          console.log('Error while appending the file ' + err.message)
-                        }
-                      });
-                    }
+                      if(err){
+                        // We cannot write to the file so that we are here.
+                        // we have to notify that about user.
+                        console.log('\nWe can not write to the file \"' + err + '\"');
+                      } else {
+                        /**
+                         * Sorts the student array in descending order of the scores
+                         * @param {score of one} a 
+                         * @param {score of another} b
+                         * @return {difference of scores} this is used by sort function to compare those scores.
+                         * Finally the sorted array of object is created.
+                         */
+			                    studentObject.students = studentObject.students.sort(function (a, b) {
+			                      return b.score - a.score;
+			                    });
 
-                    console.log('\nData written to file: \'' + destinFile + '\'');
+			    
+			                    for (var i = 0; i < studentObject.students.length; i++) {
+			                      fs.appendFile(destinFile, studentObject.students[i].id + ' | ' 
+				                      + studentObject.students[i].fName + ' | '
+				                      + studentObject.students[i].lName + ' | '
+				                      + studentObject.students[i].score + '\n', function (err) {
+				                      if (err) { 
+				                        console.log('\nError while appending the file ' + err.message)
+				                      }
+			                      });
+			                    }
 
-                    fs.exists(xmlFile, function (exists) {
-          
-                      if(exists) {
-                        // Warning to user about the 
-                        //.xml file already file exists.
-                        console.log('\nFile named \'' + xmlFile + '\' already exists\n\n\'Going to replace it\'');
+			                    console.log('\nData written to file: \'' + destinFile + '\'');
 
-                        }
+                          fs.exists(xmlFile, function (exists) {
+      
+                            if(exists) {
+                            // Warning to user about the 
+                            //.xml file already file exists.
+                              console.log('\nFile named \'' + xmlFile + '\' already exists\n\n\'Going to replace it\'');
 
-                        // Creating .xml file.
+                            }
 
-                        var rootElement = require('xmlbuilder');
+                            // Creating .xml file.
 
-                        rootElement = rootElement.create('students');
+                            var rootElement = require('xmlbuilder');
 
-                        var stud;// for student element
-                        var studName; // for name element
-                        var studScore; // for score element
+                            rootElement = rootElement.create('students');
+
+                            var stud;// for student element
+                            var studName; // for name element
+                            var studScore; // for score element
     
-                        for (i = 0; i < studentObject.students.length; i++) {
-                          stud = rootElement.ele('student', {'id': studentObject.students[i].id});
+                            for (i = 0; i < studentObject.students.length; i++) {
+                              stud = rootElement.ele('student', {'id': studentObject.students[i].id});
     
-                          studName = stud.ele('name', studentObject.students[i].fName + ' '
-                          + studentObject.students[i].lName);
+                              studName = stud.ele('name', studentObject.students[i].fName + ' '
+                              + studentObject.students[i].lName);
      
-                          studScore = stud.ele('score', studentObject.students[i].score);
-                        }
+                              studScore = stud.ele('score', studentObject.students[i].score);
+                            }
     
-                        var xmlString = rootElement.end({ pretty: true, indent: '  ', newline: '\n' });
+                            var xmlString = rootElement.end({ pretty: true, indent: '  ', newline: '\n' });
    
-                        fs.writeFile(xmlFile, xmlString);
+                            fs.writeFile(xmlFile, xmlString, function (err){
+                              if (err) {
+                                console.log('\nWe can not generate the XML file \"' + err + '\"');
+                              } else {
+                                  console.log('\nData written in XML file : \'' + xmlFile + '\'');
+                              }
+                            });
 
-                       console.log('\nData written in XML file : \'' + xmlFile + '\'');
+
+                        });
+
+			                  }
                       });
                 });
 
