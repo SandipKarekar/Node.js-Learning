@@ -8,21 +8,20 @@ var xmlFile = 'destination/xml/final.xml';
 fs.exists(sourceFile, function (exists){
   if(exists){
     fs.readFile(sourceFile, 'utf8', function (err, data) {
-
-      console.log('\nSoucefile for JSON is: \'' + sourceFile + '\'');
   
       if (err) {
 
-        console.log('\nError while reading the file' + err.message);
+        console.log('\nError while reading the file' + err.message + '.');
     
       } else {
+        console.log('\nSourcefile for JSON is: \'' + sourceFile + '\'.');
 
           try {
 
             // This try block for the handling the JSON which may 
             // have the incorrect syntax which may cause the problem.
         
-            var studentObject = JSON.parse(data);
+              var studentObject = JSON.parse(data);
 
               var Validator = require('jsonschema').Validator;
               var v = new Validator();
@@ -60,7 +59,7 @@ fs.exists(sourceFile, function (exists){
                 // If JSON is not having expected format
                 // we have to tell user about that and can't
                 // go further. 
-                console.log("Input JSON is not having the required format " + result.errors);
+                console.log('Input JSON is not having the required format ' + result.errors + '.');
               } else {
 
                 fs.exists(destinFile, function (exists) {
@@ -69,7 +68,7 @@ fs.exists(sourceFile, function (exists){
 
                       // Warning to user about the 
                       //.txt file already file exists.
-                      console.log('\nFile named \'' + destinFile + '\' already exists\n\n\'Going to replace it\'');
+                      console.log('\nFile named \'' + destinFile + '\' already exists.\n\n\'Going to replace it\'.');
 
                     }
                       // Creating .txt file.
@@ -79,7 +78,7 @@ fs.exists(sourceFile, function (exists){
                       if(err){
                       // We cannot write to the file so that we are here.
                       // we have to notify that about user.
-                        console.log('\nWe can not write to the file \"' + err + '\"');
+                        console.log('\nWe can not write to the file \"' + err + '\".');
                       } else {
                         /**
                          * Sorts the student array in descending order of the scores
@@ -99,19 +98,19 @@ fs.exists(sourceFile, function (exists){
                               + studentObject.students[i].lName + ' | '
                               + studentObject.students[i].score + '\n', function (err) {
                               if (err) { 
-                                console.log('\nError while appending the file ' + err.message)
+                                console.log('\nError while appending the file ' + err.message + '.')
                               }
                             });
                           }
 
-                          console.log('\nData written to file: \'' + destinFile + '\'');
+                          console.log('\nData written to file: \'' + destinFile + '\'.');
 
                           fs.exists(xmlFile, function (exists) {
       
                             if(exists) {
                             // Warning to user about the 
                             //.xml file already file exists.
-                              console.log('\nFile named \'' + xmlFile + '\' already exists\n\n\'Going to replace it\'');
+                              console.log('\nFile named \'' + xmlFile + '\' already exists.\n\n\'Going to replace it\'.');
 
                             }
 
@@ -138,9 +137,9 @@ fs.exists(sourceFile, function (exists){
    
                             fs.writeFile(xmlFile, xmlString, function (err){
                               if (err) {
-                                console.log('\nWe can not generate the XML file \"' + err + '\"');
+                                console.log('\nWe can not generate the XML file \"' + err + '\".');
                               } else {
-                                  console.log('\nData written in XML file : \'' + xmlFile + '\'');
+                                  console.log('\nData written in XML file : \'' + xmlFile + '\'.');
                               }
                             });
 
@@ -152,8 +151,7 @@ fs.exists(sourceFile, function (exists){
                 });
 
           }
-      }
-      catch(err) {
+      } catch (err) {
         console.log('\nError while parsing the JSON file ' + err.message);
       }
     }
